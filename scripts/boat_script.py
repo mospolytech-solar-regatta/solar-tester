@@ -2,14 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import json
-from config.models import BoatTestConfig
 from datetime import datetime, timedelta
+
 import serial
 
+from config.models import BoatTestConfig
+
 cfg = BoatTestConfig().from_file()
-config_name = 'boat'
-interval = 1
-run = True
+CONFIG_NAME = 'boat'
+INTERVAL = 1
+RUN = True
 
 
 def main():
@@ -17,12 +19,12 @@ def main():
                          parity=serial.PARITY_EVEN, rtscts=1)
     data = cfg.get_data()
     last_timestamp = datetime.now()
-    while run:
-        for d in data:
-            if datetime.now() - last_timestamp > timedelta(seconds=interval):
+    while RUN:
+        for data_frame in data:
+            if datetime.now() - last_timestamp > timedelta(seconds=INTERVAL):
                 last_timestamp = datetime.now()
-                d['created_at'] = datetime.now()
-                payload = json.dumps(d, default=str)
+                data_frame['created_at'] = datetime.now()
+                payload = json.dumps(data_frame, default=str)
                 port.write(payload.encode('utf-8'))
 
 

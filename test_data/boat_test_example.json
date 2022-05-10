@@ -1,17 +1,19 @@
-[{
-  "created_at": "2022-04-25T19:07:41.254Z",
-  "controller_watts": 5,
-  "time_to_go": 0,
-  "controller_volts": 5,
-  "MPPT_volts": 5,
-  "MPPT_watts": 0,
-  "motor_temp": 0,
-  "motor_revols": 0,
-  "speed": 0,
-  "position_lat": 0,
-  "position_lng": 0,
-  "distance_travelled": 0,
-  "laps": 0,
-  "lap_point_lat": 0,
-  "lap_point_lng": 0
-}]
+[
+  {
+    "created_at": "2022-04-25T19:07:41.254Z",
+    "controller_watts": 5,
+    "time_to_go": 0,
+    "controller_volts": 5,
+    "MPPT_volts": 5,
+    "MPPT_watts": 0,
+    "motor_temp": 0,
+    "motor_revols": 0,
+    "speed": 0,
+    "position_lat": 0,
+    "position_lng": 0,
+    "distance_travelled": 0,
+    "laps": 0,
+    "lap_point_lat": 0,
+    "lap_point_lng": 0
+  }
+]
