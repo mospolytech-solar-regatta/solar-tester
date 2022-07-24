@@ -19,9 +19,10 @@ class Config:
             self._available_configs[conf.name] = conf
 
     def get_test_config_model(self, name: str):
-        m = self._available_configs.get(name, None)
+        m = self._cfg_classes.get(name, None)
         if m is None:
             raise NotImplementedError('test config not found')
+        return m
 
     def unmarshal_config(self, name: str, cfg: str):
         cls = self.get_test_config_model(name)
@@ -29,12 +30,15 @@ class Config:
 
     @staticmethod
     def _unmarshal_config(cfg, cfg_cls):
-        cfg = json.loads(cfg)
+        if type(cfg) != dict:
+            cfg = json.loads(cfg)
         return cfg_cls(**cfg)
 
     def update_config(self, name, cfg):
-        if type(self._cfg_classes[name]) != type(cfg):
+        if type(self._available_configs[name]) != type(cfg):
             raise AssertionError('config class not valid for this config name')
+        self._available_configs[name] = cfg
+        cfg.save_config()
 
     def get_config(self, name):
         return self._available_configs.get(name, None)

@@ -24,7 +24,7 @@ def main():
             if datetime.now() - last_timestamp > timedelta(seconds=INTERVAL):
                 last_timestamp = datetime.now()
                 data_frame['created_at'] = datetime.now()
-                payload = json.dumps(data_frame, default=str)
+                payload = json.dumps(data_frame, default=str) + '\n'
                 port.write(payload.encode('utf-8'))
 
 

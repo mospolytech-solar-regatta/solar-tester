@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 
 import testing
 from config.config import Config
@@ -35,9 +35,9 @@ async def test():
 
 
 @app.post('/config/{test_name}')
-async def post_config(test_name: str, config):
-    cfg = config.unmarshal_config(test_name, config)
-    config.update_config(cfg)
+async def post_config(test_name: str, cfg=Body(default='')):
+    cfg = config.unmarshal_config(test_name, cfg)
+    config.update_config(test_name, cfg)
     return 'OK'
 
 
