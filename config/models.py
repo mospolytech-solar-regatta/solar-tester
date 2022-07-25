@@ -13,7 +13,7 @@ script_folder = 'scripts'
 
 
 class SerialConfig(BaseModel):
-    name: str = ''
+    name: str = '/tmp/vserial1'
     rate: int = 115200
 
 
