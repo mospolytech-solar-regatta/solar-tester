@@ -10,6 +10,7 @@ data_file_appendix = '_test.json'
 example_data_file_appendix = '_test_example.json'
 test_script_appendix = '_script.py'
 script_folder = 'scripts'
+from scripts.boat_script import boat_script
 
 
 class SerialConfig(BaseModel):
@@ -19,6 +20,7 @@ class SerialConfig(BaseModel):
 
 class TestConfigBase(BaseModel):
     name: str = ''
+    script = lambda: True
 
     def get_config_path(self, dir_prefix=''):
         filename = f'{self.name}{config_file_appendix}'
@@ -66,7 +68,12 @@ class TestConfigBase(BaseModel):
             data = json.loads(f.read())
             return data
 
+    def get_script(self):
+        return self.script
+
+
 
 class BoatTestConfig(TestConfigBase):
     name: str = 'boat'
     serial_config: SerialConfig = SerialConfig()
+    script = boat_script

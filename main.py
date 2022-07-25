@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, BackgroundTasks
 
 import testing
 from config.config import Config
@@ -47,9 +47,9 @@ async def get_config(test_name: str):
 
 
 @app.get('/run/{test_name}')
-async def get_run(test_name: str):
+async def get_run(test_name: str, background_tasks: BackgroundTasks):
     cfg = config.get_config(test_name)
-    runner.run(cfg)
+    runner.run(cfg, background_tasks)
     return 'ok'
 
 

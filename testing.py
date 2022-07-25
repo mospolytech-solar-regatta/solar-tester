@@ -1,8 +1,24 @@
 import json
 import os
 import subprocess
+from dataclasses import dataclass
+
+from starlette.background import BackgroundTasks
 
 from models import Status
+
+
+class TestController:
+    @dataclass
+    class STATES:
+        RUN = 1
+        STOP = 2
+        RESTART = 3
+
+    State = STATES.RUN
+
+    def terminate(self):
+        self.State = TestController.STATES.STOP
 
 
 class Runner:
@@ -10,29 +26,20 @@ class Runner:
     def __init__(self):
         self.pythopath = os.getcwd()
         self.processes = {}
-        with open('status.tmp', 'w') as f:
-            st = Status()
-            f.write(st.json())
 
-    def run(self, cfg):
-        script_path = cfg.get_script_path()
-        proc = subprocess.Popen(
-            f'PYTHONPATH={self.pythopath} {script_path}',
-            shell=True)
-        self.processes[cfg.name] = proc
+    def run(self, cfg, background: BackgroundTasks):
+        script = cfg.get_script()
+        controller = TestController()
+        background.add_task(script, controller=controller)
+        self.processes[cfg.name] = controller
 
     def stop(self, cfg):
-        self.processes[cfg.name].terminate()
+        if self.processes.get(cfg.name) is not None:
+            self.processes[cfg.name].terminate()
 
     def stop_all(self):
         for proc in self.processes.values():
             proc.terminate()
 
-    def get_status(self) -> Status:
-        with open('status.tmp') as f:
-            st = json.loads(f.read())
-            st = Status(**st)
-            return st
-
     def get_running_procs(self) -> list:
-        return self.processes.keys()
+        return list(self.processes.keys())
