@@ -13,7 +13,7 @@ RUN = True
 
 def boat_script(config, controller):
     port = serial.Serial(config.serial_config.name, config.serial_config.rate, timeout=0,
-                         parity=serial.PARITY_EVEN, rtscts=1)
+                         parity=serial.PARITY_NONE, rtscts=1)
     data = config.get_data()
     last_timestamp = datetime.now()
     while controller.State == controller.STATES.RUN:
