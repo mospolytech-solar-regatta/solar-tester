@@ -1,10 +1,14 @@
 import logging
 from typing import List
-
-from fastapi import FastAPI, Body, BackgroundTasks
-
+from fastapi import FastAPI, Body, BackgroundTasks, Depends
+from fastapi.responses import HTMLResponse
 import testing
 from config.config import Config
+from fastapi import WebSocket
+
+from dependencies import get_listener
+from listener.listener import Listener
+from responses import listener_response
 
 app = FastAPI()
 config = Config()
@@ -58,3 +62,14 @@ async def get_run(test_name: str):
     cfg = config.get_config(test_name)
     runner.stop(cfg)
     return 'ok'
+
+
+@app.websocket('/listen/{channel}')
+async def websocket_endpoint(channel: str, websocket: WebSocket, listener: Listener = Depends(get_listener)):
+    await websocket.accept()
+    await listener.listen(channel, websocket)
+
+
+@app.get("/listen")
+async def get():
+    return HTMLResponse(listener_response)
