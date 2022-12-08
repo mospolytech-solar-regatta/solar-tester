@@ -1,12 +1,24 @@
 import logging
 from typing import List
-
 from fastapi import FastAPI, Body, BackgroundTasks
-
+from fastapi.middleware.cors import CORSMiddleware
 import testing
 from config.config import Config
 
 app = FastAPI()
+
+origins = [
+    '*'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 config = Config()
 logging.info("testing initialized")
 runner = testing.Runner()

@@ -18,6 +18,7 @@ def boat_script(config, controller):
     last_timestamp = datetime.now()
     while controller.State == controller.STATES.RUN:
         for data_frame in data:
+            data_frame: dict
             if datetime.now() - last_timestamp > timedelta(seconds=INTERVAL):
                 last_timestamp = datetime.now()
                 data_frame['created_at'] = datetime.now()
