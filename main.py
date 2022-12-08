@@ -1,6 +1,5 @@
 import logging
 from typing import List
-from fastapi import FastAPI, Body, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Body, BackgroundTasks, Depends
 from fastapi.responses import HTMLResponse
