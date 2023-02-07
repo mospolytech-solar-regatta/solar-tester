@@ -5,3 +5,4 @@ __pycache__
 *.tmp
 !test_data/*_example.json
 !.gitkeep
+node_modules

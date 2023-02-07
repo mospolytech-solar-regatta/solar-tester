@@ -1,12 +1,16 @@
 import logging
+import os.path
 from typing import List
-from fastapi.middleware.cors import CORSMiddleware
+
 from fastapi import FastAPI, Body, BackgroundTasks, Depends
-from fastapi.responses import HTMLResponse
+from fastapi import WebSocket
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from starlette.responses import FileResponse
+
 import testing
 from config.config import Config
-from fastapi import WebSocket
-
 from dependencies import get_listener
 from listener.listener import Listener
 from responses import listener_response
@@ -25,6 +29,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# app.mount("/app", StaticFiles(directory="front/dist", html=True, check_dir=False), name="app")
+app.mount("/assets", StaticFiles(directory="front/dist/assets", check_dir=False), name="assets")
+app.mount("/vendor", StaticFiles(directory="front/dist/vendor", check_dir=False), name="vendor")
+
 config = Config()
 logging.info("testing initialized")
 runner = testing.Runner()
@@ -38,7 +46,18 @@ def shutdown_event():
 
 @app.get("/")
 async def root():
-    return {"message": "Hello It's testing here"}
+    return RedirectResponse("/app")
+
+
+@app.api_route('/app/{path_name:path}')
+async def front(path_name):
+    front_path = 'front/dist/index.html'
+    error_path = 'static/frontend_not_compiled.html'
+    if os.path.exists(front_path):
+        response = FileResponse(front_path)
+    else:
+        response = FileResponse(error_path)
+    return response
 
 
 @app.get("/status", response_model=List[str])
